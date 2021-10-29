@@ -12,19 +12,17 @@ import java.awt.*;
 
 public class DisplayHistogram extends ApplicationFrame {
 
-    private ChartPanel jPanel;
+    private final Histogram<String> histogram;
 
-    public DisplayHistogram(String title) {
+    private final ChartPanel jPanel;
+
+    public DisplayHistogram(String title, Histogram histogram) {
         super(title);
         jPanel = new ChartPanel(null);
         jPanel.setPreferredSize(new Dimension(500, 400));
         setContentPane(jPanel);
+        this.histogram = histogram;
         initialize();
-    }
-
-    public void execute() {
-        JFreeChart chart = createChart();
-        jPanel.setChart(chart);
     }
 
     private void initialize() {
@@ -33,17 +31,21 @@ public class DisplayHistogram extends ApplicationFrame {
         pack();
     }
 
+    public void execupte() {;
+        JFreeChart chart = createChart();
+        jPanel.setChart(chart);
+    }
+
     private JFreeChart createChart() {
         return ChartFactory.createBarChart("Histogram JFreeChart", "Dominios email", "N* de emails", createDataset(), PlotOrientation.VERTICAL, false, false, false);
     }
 
     private DefaultCategoryDataset createDataset() {
         DefaultCategoryDataset defaultCategoryDataset = new DefaultCategoryDataset();
-        defaultCategoryDataset.addValue(10, "", "gmail.com");
-        defaultCategoryDataset.addValue(1, "", "wp.pl");
-        defaultCategoryDataset.addValue(5, "", "ulpgc.es");
-        defaultCategoryDataset.addValue(5, "", "hotmail.com");
-        defaultCategoryDataset.addValue(2, "", "pw.pl");
+        for (String  value : histogram.keySet()) {
+            Integer integer = histogram.get(value);
+            defaultCategoryDataset.addValue(integer, "", value);
+        }
         return defaultCategoryDataset;
     }
 
